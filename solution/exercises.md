@@ -15,7 +15,7 @@ Gọi `call_openai` với temperature 0.0, 0.5, 1.0 và 1.5 dùng prompt
 **"Hãy kể cho tôi một sự thật thú vị về Việt Nam."**
 
 **Bạn nhận thấy quy luật gì qua bốn phản hồi?** (2–3 câu)
-> *Câu trả lời của bạn*
+> Trong mô hình ngôn ngữ, temperature đóng vai trò như "núm điều chỉnh" độ ngẫu nhiên. Temperature càng cao, mô hình càng dễ chọn các token có xác suất thấp hơn, làm tăng tính đa dạng và sự bất ngờ trong nội dung. Trái lại, nó lại dễ dẫn đến hallucination trong câu trả lời, vi phạm quy tắc ngôn ngữ và không đúng với sự thật do có quá nhiều token ngẫu nhiên.
 
 ### Câu 1.2 — Chọn temperature cho sản phẩm
 **Bạn sẽ đặt temperature bao nhiêu cho chatbot hỗ trợ khách hàng, và tại sao?**
@@ -49,8 +49,7 @@ Chọn một đoạn văn tiếng Việt ~100 từ. So sánh số token theo `co
 
 **Hai con số chênh nhau bao nhiêu phần trăm? Vì sao tiếng Việt thường tốn
 nhiều token hơn tiếng Anh cùng độ dài?**
-> *Câu trả lời của bạn*
-
+> Sau khi thử nghiệm với nhiều đoạn văn khác nhau, độ chênh lệch rơi vào khoảng 25 - 30%. Sở dĩ tiếng Việt thường tốn nhiều token hơn tiếng Anh là vì các thuật toán tách từ được huấn luyện chủ yếu trên tập dữ liệu tiếng Anh - các từ tiếng Anh phổ biến thường được đại diện bằng đúng 1 token. Trong khi đó tiếng Việt lại sử dụng dấu thanh và những ký tự đặc biệt (đ, ô, ư,...) Thông thường, những từ có dấu hoặc ký tự ít gặp trong tiếng Anh thường bị "xé lẻ" thành nhiều token khác nhau.
 ---
 
 ## Block 3 — Streaming & Độ Bền (trả lời sau Checkpoint 3)
@@ -74,13 +73,13 @@ với delay cố định giống nhau?**
 **Bạn chọn persona gì cho trợ lý của mình? Viết lại system prompt đó và giải
 thích 1–2 lựa chọn từ ngữ quan trọng trong prompt (ví dụ: vì sao yêu cầu
 "trả lời ngắn gọn", vì sao chỉ định ngôn ngữ...):**
-> *Câu trả lời của bạn*
+> "Bạn là một Senior Software Engineer và AI Technical Mentor với phong cách trao đổi thẳng thắn, ngắn gọn và mạch lạc. Quy tắc: Đi thẳng vào bản chất vấn đề trong 1–2 câu đầu tiên, tuyệt đối không dùng các câu chào hỏi xã giao hoặc dẫn dắt thừa (ví dụ: 'Dưới đây là...', 'Rất vui được giúp bạn...'). Sử dụng định dạng bảng (Table) hoặc danh sách gạch đầu dòng (Bullet Points) cho các so sánh, liệt kê hoặc dữ liệu kĩ thuật; chỉ dùng mã giả (pseudocode) hoặc đoạn code tối giản khi thật sự cần thiết." Prompt mới không dùng ngôn ngữ xã giao nhằm hạn chế tối đa việc lãng phí token output không cần thiết, đồng thời giúp tiết kiệm thời gian đọc.
 
 ### Câu 4.2 — Hạn chế & cải thiện
 **Trợ lý của bạn hiện có hạn chế lớn nhất là gì (ví dụ: history chỉ 3 lượt,
 không có bộ nhớ dài hạn, không kiểm duyệt nội dung...)? Đề xuất một cải
 thiện cụ thể và mô tả ngắn cách triển khai:**
-> *Câu trả lời của bạn*
+> Trợ lý của mình có hạn chế lớn nhất là không có bộ nhớ dài hạn. Giải pháp mình đề xuất là tích hợp kiến trúc bộ nhớ dài hạn dựa trên vector database (Long-term Memory via RAG & Entity Memory). Cách thức: Sau mỗi phiên trò chuyện, dùng một LLM nhỏ (như GPT-4o-mini) tóm tắt các thông tin quan trọng, tạo embedding và đưa vào vector database. Lưu các thông tin cố định dạng key-value hoặc knowledge graph. Khi người dùng gửi prompt mới, hệ thống trích xuất ngữ cảnh và tìm kiếm các bộ nhớ liên quan nhất từ vector database.
 
 ---
 
