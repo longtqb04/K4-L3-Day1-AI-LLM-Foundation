@@ -19,7 +19,7 @@ Gọi `call_openai` với temperature 0.0, 0.5, 1.0 và 1.5 dùng prompt
 
 ### Câu 1.2 — Chọn temperature cho sản phẩm
 **Bạn sẽ đặt temperature bao nhiêu cho chatbot hỗ trợ khách hàng, và tại sao?**
-> *Câu trả lời của bạn*
+> Với chatbot hỗ trợ khách hàng, mình sẽ đặt temperature càng thấp càng tốt, thường là 0.0-0.2. Sở dĩ là nếu để temperature ở mức 1 như nhiều mô hình ngôn ngữ khác, hiện tượng hallucination (ảo giác) sẽ đưa ra những thông tin sai lệch, gây ảnh hưởng đến vận hành và uy tín của doanh nghiệp. Khi temperature là rất thấp, dù các khách hàng khác nhau hỏi cùng một câu hỏi theo các cách diễn đạt khác nhau, chatbot vẫn sẽ đưa ra một phương án giải quyết chuẩn chỉnh duy nhất.
 
 ### Câu 1.3 — Đánh đổi chi phí
 Kịch bản: 10.000 người dùng hoạt động mỗi ngày, mỗi người gọi API 3 lần,
@@ -27,7 +27,7 @@ mỗi lần trung bình ~350 token đầu ra.
 
 **Ước tính GPT-4o đắt hơn GPT-4o-mini bao nhiêu lần cho workload này? Nêu một
 trường hợp GPT-4o xứng đáng với chi phí và một trường hợp nên dùng mini:**
-> *Câu trả lời của bạn*
+> Dựa trên số liệu cung cấp từ solution.py, giá cho mỗi 1K token của GPT-4o là 0.01 USD, còn GPT-40-mini là 0.0006. Xét số token output là bằng nhau ở cả hai bên - như vậy, GPT-4o đắt hơn 0.01/0.0006 = xấp xỉ 16.67 lần GPT-4o-mini. Một trường hợp GPT-4o xứng đáng với ci phí là trong trợ lý phân tích pháp lý hoặc chẩn đoán y tế phức tạp. Đây là những công việc đòi hỏi suy luận logic nhiều bước, tuân thủ định dạng ngặt nghèo, hiểu ngữ cảnh chuyên sâu và độ chính xác cao tuyệt đối, nếu hiện tượng hallucination xảy ra, thiệt hại sẽ lớn hơn nhiều so với chênh lệch giá API. GPT-4o-mini lại phù hợp trong trường hợp yêu cầu không quá chi tiết như dịch thuật, phân loại phản hồi khách hàng hoặc tóm tắt đoạn văn ngắn.
 
 ---
 
@@ -41,7 +41,7 @@ Gọi `chat_with_system_prompt` hai lần với cùng câu hỏi
 
 **Hai phản hồi khác nhau như thế nào (độ dài, từ vựng, ví dụ)? System prompt
 ảnh hưởng đến hành vi model ra sao?** (3–4 câu)
-> *Câu trả lời của bạn*
+> Phản hồi 1 dùng những từ ngữ đơn giản, ví dụ trực quan để trẻ em có thể hiểu, còn phản hồi 2 dài hơn, sử dụng nhiều thuật ngữ chuyên ngành, cùng nhiều ví dụ chuyên sâu. System prompt đóng vai trò như một bộ lọc định hình: đặt ngữ cảnh và áp đặt các ràng buộc về văn phong, độ dài, góc nhìn cho mô hình.
 
 ### Câu 2.2 — tiktoken vs đếm từ
 Chọn một đoạn văn tiếng Việt ~100 từ. So sánh số token theo `count_tokens`
@@ -58,13 +58,13 @@ nhiều token hơn tiếng Anh cùng độ dài?**
 ### Câu 3.1 — Trải nghiệm người dùng với streaming
 **Streaming quan trọng nhất trong trường hợp nào, và khi nào thì
 non-streaming lại phù hợp hơn?** (1 đoạn văn)
-> *Câu trả lời của bạn*
+> Streaming quan trọng nhất trong các hệ thống xử lý thời gian thực (chatbot, trợ lý giọng nói...) vì việc giảm latency là yêu cầu cốt lõi để nâng cao trải nghiệm người dùng, như thể đang giao tiếp giữa người với người. Non-streaming lại phù hợp với các tác vụ ngầm như xuất dữ liệu có cấu trúc (.json), gọi API hệ thống,... đảm bảo tính chính xác trước khi gửi về phía người dùng.
 
 ### Câu 3.2 — Vì sao backoff theo cấp số nhân?
 **So với delay cố định (ví dụ luôn chờ 1 giây), exponential backoff có lợi
 thế gì khi API bị quá tải? Điều gì xảy ra nếu hàng nghìn client cùng retry
 với delay cố định giống nhau?**
-> *Câu trả lời của bạn*
+> Exponential backoff có tác dụng tăng thời gian chờ theo cấp số nhân (ví dụ 0.1, 0.2, 0.4... s) giúp giảm áp lực dồn dập lên API, tạo khoảng nghỉ đủ dài cho hệ thống xử lý queue tắc nghẽn. Khi hàng nghìn client cùng retry và delay cố định giống nhau, thay vì giảm tải, API sẽ liên tục bị đập mạnh bởi từng đợt sóng request đồng loạt. Server không thể xử lý xong các tác vụ dở dang, dẫn đến trạng thái quá tải kéo dài mãi.
 
 ---
 
